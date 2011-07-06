@@ -131,10 +131,14 @@ class RSVP():
             # Answer to first survey question asked when the user RSVP's. 
             # This requests the user to enter their full name for building security on some meetups.
             # This field is only returned to organizers and assistant organizers.
-            answer = repr(line["answers"][0])
-            answer = answer.translate(self.trans)           
-            answer = answer[2:-1]
-            
+            try:
+                answer = repr(line["answers"][0])
+                answer = answer.translate(self.trans)           
+                answer = answer[2:-1]
+            except KeyError:
+                # Ignore.
+                answer = ""
+
             self.names.append((name, answer))
             
         self.names = sorted(self.names, key=operator.itemgetter(1))
