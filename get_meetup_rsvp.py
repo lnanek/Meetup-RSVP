@@ -113,20 +113,8 @@ class RSVP():
         
     def get_names(self):
         """
-        Extract first, middle, and last name from json and create a 
-        list, the instance variable self.names, sorted by last name.
-        
-        Since these are likely to be printed on small badges we ignore middle initials
-        and concentate last names which consist of more than one word or have titles 
-        after them.
-        
-        Bilbo B. Baggins, Esq.
-        Zeljko R. Miscosich Rentlanich
-        
-        becomes [fname] [lname]
-        
-        [Bilbo] [Baggins, Esq.]
-        [Zeljko] [Miscosich Rentlanich]
+        Put the name of the member according to their profile in the first value.
+        Put the name of the member according to the first of the survey answers when they signed up in the second value.
         """
         results = self.json_rsvps["results"]
         
