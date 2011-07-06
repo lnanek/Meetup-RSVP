@@ -133,36 +133,21 @@ class RSVP():
         for line in results:
             if line["response"] != 'yes':
                 continue
-            
-            name = str(line["member"]["name"])
+                
+	    # The member's name in their profile. Replace str() with repr() to fix unicode to ascii crash due to member with foreign name.            
+            name = repr(line["member"]["name"])
             name = name.translate(self.trans)
-                
-            name_components = name.strip().split()
-            if not name_components:
-                continue
+            # Remove the "u " remaining from the repr.
+            name = name[2:-1]
             
-            l = len(name_components)
-            fname = lname = ""
+            # Answer to first survey question asked when the user RSVP's. 
+            # This requests the user to enter their full name for building security on some meetups.
+            # This field is only returned to organizers and assistant organizers.
+            answer = repr(line["answers"][0])
+            answer = answer.translate(self.trans)           
+            answer = answer[2:-1]
             
-            fname = name_components[0]
-            fname = fname[0].upper()+fname[1:]
-            if l == 2:
-                lname = name_components[1]
-            elif l > 2:
-                lname = " ".join(name_components[2:])
-            
-            if lname:
-                # The last name cannot be one letter or one letter plus a period
-                lname = lname[0].upper()+lname[1:]
-                if len(lname) ==1:
-                    continue
-                
-                if len(lname) ==2:
-                    if lname[1] == ".":
-                        continue
-                    
-
-            self.names.append((fname,lname))
+            self.names.append((name, answer))
             
         self.names = sorted(self.names, key=operator.itemgetter(1))
     
@@ -171,10 +156,10 @@ class RSVP():
         """ Write the list of names to a CSV file. """
         f = tempfile.NamedTemporaryFile(delete=False, suffix="csv")
         self.tempfile = f.name
-        
-        for entry in self.names:
-            fname, lname = entry
-            f.write("{f},{l}\n".format(f=fname, l=lname))
+              
+        for entry in self.names:           
+            name, answer = entry
+            f.write("{n},{a}\n".format(n=name, a=answer))
         f.close()
         
         
