@@ -134,7 +134,7 @@ class RSVP():
             if line["response"] != 'yes':
                 continue
                 
-	    # The member's name in their profile. Replace str() with repr() to fix unicode to ascii crash due to member with foreign name.            
+            # The member's name in their profile. Replace str() with repr() to fix unicode to ascii crash due to member with foreign name.            
             name = repr(line["member"]["name"])
             name = name.translate(self.trans)
             # Remove the "u " remaining from the repr.
